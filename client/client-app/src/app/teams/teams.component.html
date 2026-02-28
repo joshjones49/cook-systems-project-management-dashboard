@@ -1,0 +1,72 @@
+<div class="teams-page">
+    <h1 class="teams-title">Teams</h1>
+    <p class="no-teams" *ngIf="noTeams">No teams to display.</p>
+    <div class="user-teams">
+        @for(team of teams; track team.id) {
+        <div class="team-card card" (click)="goToProjects(team.id, team.name)">
+            <div class="team-card-banner">
+                <h1 class="team-name">{{ team.name }}</h1>
+                <h3 class="project-count"># of Projects: {{team.projects.length}} </h3>
+            </div>
+
+            <div class="team-card-body">
+                <h3 class="members-heading">Members</h3>
+                <div class="member-display">
+                    @for(user of team.users; track user.id) {
+                    <div class="member-name">{{user.profile.firstName}}</div>
+                    } @empty {
+                    <div class="no-members">
+                        <h4>No Members</h4>
+                    </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+        } @empty {
+
+        }
+        @if(!currentUser.admin) {
+
+        } @else {
+        <div class="new-team card" (click)="openModal()">
+            <h1 class="plus">+</h1>
+            <h3 class="new-team-label">New Team</h3>
+        </div>
+        }
+
+
+        <div class="modal" *ngIf="isModalOpen">
+            <div class="modal-content">
+                <h2>Create New Team</h2>
+                <form (ngSubmit)="createTeam()">
+                    <div class="form-group">
+                        <input type="text" [(ngModel)]="newTeam.name" name="name" placeholder="Team Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" [(ngModel)]="newTeam.description" name="description"
+                            placeholder="Description" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Members</label>
+                        <div class="user-list">
+                            <div *ngFor="let user of availableUsers" class="user-option" (click)="selectUser(user)">
+                                {{user.profile.firstName}} {{user.profile.lastName}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="selected-users" *ngIf="selectedUsers.length > 0">
+                        <div *ngFor="let user of selectedUsers" class="user-card">
+                            <span class="user-name">{{user.profile.firstName}} {{user.profile.lastName}}</span>
+                            <span class="remove-user" (click)="removeSelectedUser(user)">×</span>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit">Create Team</button>
+                        <button type="button" (click)="closeModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

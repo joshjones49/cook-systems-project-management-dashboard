@@ -1,0 +1,88 @@
+<div class="table-container">
+  <div class="heading">
+    <h1>User Registry </h1>
+    <p>A general view of all your members in your organization</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Active</th>
+        <th>Admin</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="!users?.length">
+        <td colspan="5" class="no-users">No users for your current company.</td>
+      </tr>
+      <tr *ngFor="let user of users">
+        <td>{{user.profile.firstName}} {{user.profile.lastName}}</td>
+        <td>{{user.profile.email}}</td>
+        <td>
+          <span [ngClass]="{'yes': user.active, 'no': !user.active}">
+            {{user.active ? 'YES' : 'NO'}}
+          </span>
+        </td>
+        <td>
+          <span [ngClass]="{'yes': user.admin, 'no': !user.admin}">
+            {{user.admin ? 'YES' : 'NO'}}
+          </span>
+        </td>
+        <td>{{user.status}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="button-container">
+    <button class="add-button" (click)="openModal()">ADD USER</button>
+  </div>
+
+  <div class="modal" *ngIf="isModalOpen">
+    <div class="modal-content">
+      <h2>Create New User</h2>
+      <form (ngSubmit)="createUser()">
+        <div class="form-group">
+          <input type="text" [(ngModel)]="newUser.credentials.username" name="username" placeholder="Username" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group half-width">
+            <input type="text" [(ngModel)]="newUser.profile.firstName" name="firstName" placeholder="First Name"
+              required>
+          </div>
+          <div class="form-group half-width">
+            <input type="text" [(ngModel)]="newUser.profile.lastName" name="lastName" placeholder="Last Name" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="email" [(ngModel)]="newUser.profile.email" name="email" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <input type="tel" [(ngModel)]="newUser.profile.phone" name="phone" placeholder="Phone" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group half-width">
+            <input type="password" [(ngModel)]="newUser.credentials.password" name="password" placeholder="Password"
+              required>
+          </div>
+          <div class="form-group half-width">
+            <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Confirm Password"
+              required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Make user an admin role?</label>
+          <select [(ngModel)]="newUser.admin" name="admin">
+            <option [ngValue]="false">No</option>
+            <option [ngValue]="true">Yes</option>
+          </select>
+        </div>
+        <div class="button-group">
+          <button type="submit">Create User</button>
+          <button type="button" (click)="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

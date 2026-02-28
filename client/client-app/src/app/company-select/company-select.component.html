@@ -1,0 +1,16 @@
+<div class="container">
+    <h1>Select a Company:</h1>
+    <select *ngIf="companies.length && !errorMessage; else noCompanies" name="companies" id=""
+        [(ngModel)]="selectedCompany">
+        <option disabled value="">Select a Company</option>
+        <option *ngFor="let company of companies" [value]="company.name">{{ company.name }}</option>
+    </select>
+
+    <button [disabled]="!selectedCompany" (click)="selectCompany()">Submit</button>
+
+    <ng-template #noCompanies>
+        <p>No companies found.</p>
+    </ng-template>
+
+    <p *ngIf="errorMessage">{{ errorMessage }}</p>
+</div>

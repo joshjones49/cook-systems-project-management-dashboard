@@ -1,0 +1,58 @@
+<div class="container">
+    <a class="back-button" (click)="handleNavBack()">
+        &lt; Back</a>
+    <div class="page-heading">
+        <h1>Projects for team {{teamName}}</h1>
+        <div *ngIf="noProjects">
+            <p>No projects to show for team {{teamName}}.</p>
+        </div>
+        <button *ngIf="isAdmin" class="new-project" (click)="openModal()">New</button>
+    </div>
+
+    <ul *ngIf="projects.length">
+        <li *ngFor="let project of projects">
+            <div class="li-heading">
+                <p class="title">{{project.name}}</p>
+                <p class="status" [ngClass]="{ 'active': project.active, 'inactive': !project.active }">{{project.active
+                    ? 'Active' :
+                    'Inactive'}}</p>
+            </div>
+            <div class="project-body">
+                <p class="description">{{project.description}}</p>
+                <button class="edit-project" (click)="openModal(project)">Edit</button>
+            </div>
+
+        </li>
+    </ul>
+
+    
+
+    <!-- Modal -->
+    <div class="modal" *ngIf="showModal">
+        <div class="modal-content">
+            <form (ngSubmit)="submitProject()">
+                <div>
+                    <label for="name">Project Name:</label>
+                    <input id="name" [(ngModel)]="newProject.name" name="name" required maxlength="50" />
+                </div>
+                <div>
+                    <label for="description">Description:</label>
+                    <textarea id="description" [(ngModel)]="newProject.description" name="description" required
+                        maxlength="255"></textarea>
+                </div>
+                <div *ngIf="isAdmin">
+                    <label for="active">Active?</label>
+                    <select id="active" [(ngModel)]="newProject.active" name="active">
+                        <option [ngValue]="true">Yes</option>
+                        <option [ngValue]="false">No</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button class="close-btn" type="button" (click)="closeModal()">&times;</button>
+                    <button class="submit" type="submit" [disabled]="!newProject.name || !newProject.description">
+                        {{isEditMode ? 'Save' : 'Submit'}}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
